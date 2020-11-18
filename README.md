@@ -7,4 +7,4 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Each branch hold solution to the each exercise as stipulated on the course
 
-git@github.com:arehtunde/fullstackopen_react.git
+https://github.com/arehtunde/fullstackopen_react
