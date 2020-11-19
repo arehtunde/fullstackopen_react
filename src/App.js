@@ -7,13 +7,13 @@ const Content = ({details}) => {
   )
 };
 
-const Total = ({total}) => {
-   const add = total.reduce((prev, cur) => {
+const Total = ({details}) => {
+   const total = details.reduce((prev, cur) => {
      return prev + cur.exercises;
     }, 0);
 
    return (
-    <p>Number of exercises {add}</p>
+    <p>Number of exercises {total}</p>
    )
 };
 
@@ -41,7 +41,7 @@ const App = () => {
     <div>
       <Header course={course} />
       <Content details={details} />
-      <Total total={details}/>
+      <Total details={details}/>
     </div>
   )
 }
