@@ -1,48 +1,92 @@
-const Header = ({course}) => <h1>{course}</h1>;
+import { useState } from 'react';
 
-const Content = ({details}) => {
+const Header = ({text}) => <h1>{text}</h1>;
 
+const StatList = ({name, counter}) => (
+  <tr>
+    <td>{name}</td>
+    <td>{counter}</td>
+  </tr>
+);
+
+const Statistics = ({details, all}) => {
+  let good, bad;
+  [good, , bad] = details;
+
+  const renderStat = details.map(detail => (
+    <StatList key={detail.id} name={detail.name} counter={detail.value} />
+  ))
   return (
-    details.map(({id, part, exercises}) => <p key={id}>{part} {exercises}</p>)
+    <>
+      <table>
+        <tbody>
+          {renderStat}
+          <StatList name='total' counter={all.value} />
+          <StatList name='average' counter={((good.value - bad.value) / all.value).toFixed(2)} />
+          <StatList name='positive' counter={((good.value / all.value) * 100).toFixed(2) + '%'} />
+        </tbody>
+      </table>
+    </>
   )
 };
 
-const Total = ({details}) => {
-   const total = details.reduce((prev, cur) => {
-     return prev + cur.exercises;
-    }, 0);
-
-   return (
-    <p>Number of exercises {total}</p>
-   )
+const Button = ({details}) => {
+  const renderButton = details.map(detail => (
+    <button key={detail.id} onClick={detail.handleClick}>
+      {detail.name}
+    </button>
+  ))
+  return renderButton;
 };
 
 const App = () => {
-  const course = 'Half Stack application development';
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [total, setTotal] = useState(0);
+
   const details = [
     {
       id: 1,
-      part: 'Fundamentals of React',
-      exercises: 10,
+      name: 'good',
+      value: good,
+      handleClick: () => {
+        setGood(good + 1);
+        setTotal(total + 1);
+      },
     },
     {
       id: 2,
-      part: 'Using props to pass data',
-      exercises: 7,
+      name: 'neutral',
+      value: neutral,
+      handleClick: () => {
+        setNeutral(neutral + 1)
+        setTotal(total + 1);
+      },
     },
     {
       id: 3,
-      part: 'State of a component',
-      exercises: 14,
+      name: 'bad',
+      value: bad,
+      handleClick: () => {
+        setBad(bad + 1)
+        setTotal(total + 1);
+      },
     },
   ];
 
+  const all = {
+    name: 'total',
+    value: total,
+  };
+
   return (
-    <div>
-      <Header course={course} />
-      <Content details={details} />
-      <Total details={details}/>
-    </div>
+    <>
+      <Header text='give feedback' />
+      <Button details={details} />
+      <Header text='statistics' />
+      <Statistics details={details} all={all} />
+    </>
   )
 }
 
