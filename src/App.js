@@ -10,12 +10,21 @@ const StatList = ({name, counter}) => (
 );
 
 const Statistics = ({details, all}) => {
-  let good, bad;
-  [good, , bad] = details;
+  if (all.value === 0) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
 
   const renderStat = details.map(detail => (
     <StatList key={detail.id} name={detail.name} counter={detail.value} />
   ))
+
+  let good, bad;
+  [good, , bad] = details;
+
   return (
     <>
       <table>
