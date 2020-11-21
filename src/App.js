@@ -2,101 +2,64 @@ import { useState } from 'react';
 
 const Header = ({text}) => <h1>{text}</h1>;
 
-const StatList = ({name, counter}) => (
-  <tr>
-    <td>{name}</td>
-    <td>{counter}</td>
-  </tr>
-);
+const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</button>;
 
-const Statistics = ({details, all}) => {
-  if (all.value === 0) {
+const MostVoted = ({votes}) => {
+  if (votes.every(x => x === 0)) {
     return (
       <div>
-        No feedback given
+        No voted anecdote
       </div>
     )
   }
 
-  const renderStat = details.map(detail => (
-    <StatList key={detail.id} name={detail.name} counter={detail.value} />
-  ))
-
-  let good, bad;
-  [good, , bad] = details;
+  const maxVotes = Math.max(...votes);
+  const mostVoted = votes.indexOf(maxVotes);
 
   return (
-    <>
-      <table>
-        <tbody>
-          {renderStat}
-          <StatList name='total' counter={all.value} />
-          <StatList name='average' counter={((good.value - bad.value) / all.value).toFixed(2)} />
-          <StatList name='positive' counter={((good.value / all.value) * 100).toFixed(2) + '%'} />
-        </tbody>
-      </table>
-    </>
-  )
-};
-
-const Button = ({details}) => {
-  const renderButton = details.map(detail => (
-    <button key={detail.id} onClick={detail.handleClick}>
-      {detail.name}
-    </button>
-  ))
-  return renderButton;
-};
-
-const App = () => {
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  const [total, setTotal] = useState(0);
-
-  const details = [
-    {
-      id: 1,
-      name: 'good',
-      value: good,
-      handleClick: () => {
-        setGood(good + 1);
-        setTotal(total + 1);
-      },
-    },
-    {
-      id: 2,
-      name: 'neutral',
-      value: neutral,
-      handleClick: () => {
-        setNeutral(neutral + 1)
-        setTotal(total + 1);
-      },
-    },
-    {
-      id: 3,
-      name: 'bad',
-      value: bad,
-      handleClick: () => {
-        setBad(bad + 1)
-        setTotal(total + 1);
-      },
-    },
-  ];
-
-  const all = {
-    name: 'total',
-    value: total,
-  };
-
-  return (
-    <>
-      <Header text='give feedback' />
-      <Button details={details} />
-      <Header text='statistics' />
-      <Statistics details={details} all={all} />
-    </>
+    <div>
+      <p>{anecdotes[mostVoted]}</p>
+      <p>has {maxVotes} votes(s)</p>
+    </div>
   )
 }
 
-export default App;
+const App = ({anecdotes}) => {
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+
+  const handleClick = () => {
+    const random = Math.floor(Math.random() * anecdotes.length);
+    return setSelected(random)
+  };
+
+  const handleVote = () => {
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    return setVotes(newVotes);
+  };
+
+  return (
+    <div>
+      <Header text='Anecdote of the day' />
+      <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected]} vote(s)</p>
+      <Button text='vote' handleClick={handleVote} />
+      <Button text='next anecdotes' handleClick={handleClick} />
+
+      <Header text='Anecdote with the most votes' />
+      <MostVoted votes={votes} />
+    </div>
+  )
+}
+
+const anecdotes = [
+  'If it hurts, do it more often',
+  'Adding manpower to a late software project makes it later!',
+  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+  'Premature optimization is the root of all evil.',
+  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
+];
+
+export { App, anecdotes};
