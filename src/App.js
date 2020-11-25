@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
+import Title from './components/title'
+import FilterSearch from './components/filter'
+import AddContact from './components/addContact'
+import DisplayContact from './components/DisplayContact'
 
-const Title = ({title}) => <h2>{title}</h2>
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -54,45 +57,23 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-  const filterNumber = filter
+  const filterName = filter
   ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
   : persons
 
   return (
     <div>
       <Title title='Phonebook' />
-      <div>
-        filter shown with: <input
-          value={filter}
-          onChange={handleFilter}
-        />
-      </div>
+      <FilterSearch filter={filter} handleFilter={handleFilter} />
       <Title title='Add new' />
-      <form onSubmit={addName}>
-        <div>
-          name: <input 
-            value={newDetails.name}
-            onChange={handleChange} 
-            />
-        </div>
-        <div>
-          number: <input 
-            value={newDetails.number}
-            onChange={handleNumber} 
-            />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <AddContact 
+        addName={addName}
+        newDetails={newDetails}
+        handleChange={handleChange}
+        handleNumber={handleNumber}
+      />
       <Title title='Numbers' />
-      <ul>
-        {
-          filterNumber.map((person) => 
-            <li key={person.name}>{person.name} {person.number}</li>
-          )
-        }
-      </ul>
+      <DisplayContact filterName={filterName}/>
     </div>
   )
 }
