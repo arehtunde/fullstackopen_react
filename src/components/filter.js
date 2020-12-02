@@ -1,9 +1,8 @@
-const FilterSearch = ({filter, handleFilter}) => (
+const FilterSearch = ({handleChange}) => (
   <div>
-    Filter shown with: <input
+    Find countries: <input
       type='text'
-      value={filter}
-      onChange={handleFilter}
+      onChange={handleChange}
     />
   </div>
 )
