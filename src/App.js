@@ -11,15 +11,17 @@ const App = () => {
   useEffect(() => {
     axios
     .get('https://restcountries.eu/rest/v2/all')
-    .then((response) => {
-      setCountries(response.data);
-    });
+    .then(response => setCountries(response.data));
   }, [])
 
   const handleChange = (event) => {
     setSearch(event.target.value)
     setMessage(false)
   } 
+
+  const handleClick = (event) => {
+    setSearch(event.target.parentElement.firstChild.data) 
+  }
 
   const filterCountries = message
   ? 0
@@ -29,7 +31,10 @@ const App = () => {
     <>
       <h1>Find Countries</h1>
       <FilterSearch handleChange={handleChange} />
-      <Result countryList={filterCountries} />
+      <Result 
+        countryList={filterCountries} 
+        handleClick={handleClick}
+      />
     </>
   )
 }
