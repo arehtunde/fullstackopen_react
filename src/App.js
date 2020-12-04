@@ -4,6 +4,7 @@ import Title from './components/title'
 import FilterSearch from './components/filter'
 import AddContact from './components/addContact'
 import DisplayContact from './components/DisplayContact'
+import contactServices from './services/contact'
 
 
 const App = () => {
@@ -13,13 +14,13 @@ const App = () => {
   })
   const [filter, setFilter] = useState('')
 
-useEffect(() => {
-  axios
-    .get('http://localhost:3001/persons')
-    .then((response) => {
-    setPersons(response.data);
-    });
-}, [])
+  useEffect(() => {
+    contactServices
+      .getRequest()
+      .then(initialContacts => {
+        setPersons(initialContacts);
+      });
+  }, [])
 
   const addName = (event) => {
     event.preventDefault()
@@ -35,12 +36,31 @@ useEffect(() => {
       return setnewDetails({
         name: '', number: ''
       })
-    } 
+    }
 
-    setPersons(persons.concat(detailsObject))
-    setnewDetails({
-      name: '', number: ''
-    })
+    contactServices
+      .createRequest(detailsObject)
+      .then(returnedContact => {
+        setPersons(persons.concat(returnedContact))
+        setnewDetails({
+          name: '', number: ''
+        })
+      }) 
+  }
+
+  const removeContact = (name) => {
+    /* const findContact = persons.findIndex(person => person.id !== id)
+    console.log(findContact) */
+    // const newContact = persons.find(person => person.id === id)
+    // const url = `http://localhost:3001/persons/${newContact.id}`
+    // setNotes(notes.map(note => note.id !== id ? note : returnedNote))  
+
+
+    /* contactServices
+      .deleteContact(findContact.id, findContact.name)
+      .then(returnedContact => {
+        setPersons(persons.concat(returnedContact)))
+      }) */
   }
 
   const handleChange = (event) => {
@@ -77,7 +97,10 @@ useEffect(() => {
         handleNumber={handleNumber}
       />
       <Title title='Numbers' />
-      <DisplayContact filterName={filterName}/>
+      <DisplayContact 
+        filterName={filterName}
+        removeContact={removeContact}
+      />
     </div>
   )
 }
