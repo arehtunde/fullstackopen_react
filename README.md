@@ -1,10 +1,4 @@
-# Fullstackopen React Exercises
+# React Official Tutorial (Tic-Tac-Toe)
 
-This repositry is for submitting exercises on the Fullstackopen react course
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Live Application URL
-
-Each branch hold solution to the each exercise as stipulated on the course
-
-https://github.com/arehtunde/fullstackopen_react
+This branch is the follow through of the official tic-tac-toe tutorial on ReactJS website.
+All class components have been converted to functional components with Hooks

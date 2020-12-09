@@ -46,7 +46,7 @@ const Game = () => {
 
   const handleClick = (i) => {
     const recent = history.slice(0, stepNumber + 1)
-    const current = history[history.length - 1];
+    const current = recent[recent.length - 1];
     const squares = current.squares.slice();
 
     if (calculateWinner(squares) || squares[i]) {
@@ -57,7 +57,7 @@ const Game = () => {
 
     setHistory(recent.concat([{squares: squares}]))
     setXNext(!xNext);
-    setStepNumber(history.length)
+    setStepNumber(recent.length)
   }
 
   const jumpTo = (step) => {
@@ -65,10 +65,11 @@ const Game = () => {
     setXNext((step % 2) === 0)
   }
 
-  const current = history[stepNumber];
+  const recent = history;
+  const current = recent[stepNumber];
   const winner = calculateWinner(current.squares);
 
-  const moves = history.map((step, move) => {
+  const moves = recent.map((step, move) => {
     const desc = move ? `Go to move #${move}` : 'Go to game start';
     return (
       <li key={move}>
